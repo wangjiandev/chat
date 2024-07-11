@@ -1,0 +1,8 @@
+### chat api
+GET http://127.0.0.1:8080
+
+### sign in
+POST http://127.0.0.1:8080/api/signin
+
+### sign up
+POST http://127.0.0.1:8080/api/signup
