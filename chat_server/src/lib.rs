@@ -8,7 +8,9 @@ use config::AppConfig;
 use handlers::{auth::*, chat::*, index_handler, message::*};
 
 pub mod config;
+pub mod error;
 pub mod handlers;
+pub mod model;
 
 #[derive(Debug, Clone)]
 pub(crate) struct AppState {

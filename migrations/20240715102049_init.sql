@@ -1,16 +1,16 @@
+-- Add migration script here
 -- this file is used for postgresql database initialization
 -- create user table
 CREATE TABLE IF NOT EXISTS users (
 	id BIGSERIAL PRIMARY KEY,
-	username VARCHAR(64) NOT NULL,
+	fullname VARCHAR(64) NOT NULL,
 	-- hashed argon2 password
 	password VARCHAR(64) NOT NULL,
 	email VARCHAR(50) NOT NULL,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	created_at timestamptz DEFAULT CURRENT_TIMESTAMP
 );
 
--- create index for user for username
-CREATE UNIQUE INDEX IF NOT EXISTS username_index ON users(username);
+
 -- create index for user for email
 CREATE UNIQUE INDEX IF NOT EXISTS email_index ON users(email);
 
@@ -23,22 +23,20 @@ CREATE TABLE IF NOT EXISTS chats (
 	name VARCHAR(128) NOT NULL,
 	type chat_type NOT NULL,
 	members Bigint[] NOT NULL,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	created_at timestamptz DEFAULT CURRENT_TIMESTAMP
 );
 
 -- create message table
 CREATE TABLE IF NOT EXISTS messages (
 	id BIGSERIAL PRIMARY KEY,
-	chat_id BIGINT NOT NULL,
-	sender_id BIGINT NOT NULL,
+	chat_id BIGINT NOT NULL REFERENCES chats(id),
+	sender_id BIGINT NOT NULL REFERENCES users(id),
 	content TEXT NOT NULL,
 	images TEXT[],
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (chat_id) REFERENCES chats(id),
-	FOREIGN KEY (sender_id) REFERENCES users(id)
+	created_at timestamptz DEFAULT CURRENT_TIMESTAMP
 );
 
 -- create index for message for chat_id and created_at order by created_at desc
 CREATE INDEX IF NOT EXISTS chat_id_created_at_index ON messages(chat_id, created_at DESC);
--- create index for message for sender_id
-CREATE INDEX IF NOT EXISTS sender_id_index ON messages(sender_id);
+-- create index for message for sender_id and created_at order by created_at desc
+CREATE INDEX IF NOT EXISTS sender_id_index ON messages(sender_id, created_at DESC);
