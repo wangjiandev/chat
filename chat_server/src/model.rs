@@ -8,7 +8,9 @@ use sqlx::FromRow;
 pub struct User {
     pub id: i64,
     pub fullname: String,
-    pub password: String,
+    #[sqlx(default)]
+    #[serde(skip)]
+    pub password: Option<String>,
     pub email: String,
     pub created_at: DateTime<Utc>,
 }

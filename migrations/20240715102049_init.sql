@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
 	id BIGSERIAL PRIMARY KEY,
 	fullname VARCHAR(64) NOT NULL,
 	-- hashed argon2 password
-	password VARCHAR(64) NOT NULL,
+	password VARCHAR(97) NOT NULL,
 	email VARCHAR(50) NOT NULL,
 	created_at timestamptz DEFAULT CURRENT_TIMESTAMP
 );
