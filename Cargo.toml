@@ -1,12 +1,8 @@
-[package]
-name = "chat"
-version = "0.1.0"
-edition = "2021"
-license = "MIT"
+[workspace]
+members = ["chat_server", "notify_server"]
+resolver = "2"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
+[workspace.dependencies]
 anyhow = "1.0.97"
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.140"
@@ -14,6 +10,7 @@ serde_yaml = "0.9.34"
 axum = { version = "0.8.3" }
 tokio = { version = "1.41.1", features = ["full"] }
 tower-http = { version = "0.6.1", features = ["trace"] }
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-windows_x86_64_msvc = "=0.53.0"
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
+thiserror = "2.0.12"
+sqlx = { version = "0.8.3", features = ["runtime-tokio-rustls", "postgres"] }
