@@ -38,18 +38,22 @@ impl User {
     }
 
     /// Verify a user email and password
-    pub async fn verify(email: &str, password: &str, pool: &PgPool) -> Result<bool, AppError> {
+    pub async fn verify(
+        email: &str,
+        password: &str,
+        pool: &PgPool,
+    ) -> Result<Option<Self>, AppError> {
         let user = Self::find_by_email(email, pool).await?;
         match user {
             Some(mut user) => {
                 let password_hash = mem::take(&mut user.password_hash);
                 let is_valid = Self::verify_password(password, &password_hash.unwrap_or_default())?;
                 if !is_valid {
-                    return Ok(false);
+                    return Ok(None);
                 }
-                Ok(true)
+                Ok(Some(user))
             }
-            None => Ok(false),
+            None => Ok(None),
         }
     }
 
@@ -74,8 +78,40 @@ impl User {
 
 #[cfg(test)]
 mod tests {
+    use std::path::Path;
+
     use super::*;
+    use anyhow::Result;
+    use sqlx_db_tester::TestPg;
 
     #[tokio::test]
-    async fn create_user_should_succeed() {}
+    async fn hash_password_and_verify_should_work() -> Result<()> {
+        let password = "password";
+        let password_hash = User::hash_password(password)?;
+        assert_eq!(password_hash.len(), 97);
+        let is_valid = User::verify_password(password, &password_hash)?;
+        assert!(is_valid);
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn create_and_verify_user_should_work() -> Result<()> {
+        let test_pg = TestPg::new(
+            "postgres://wangjian:@localhost:5432".to_string(),
+            Path::new("../migrations"),
+        );
+        let pool = test_pg.get_pool().await;
+        let email = "test@test.com";
+        let fullname = "Test User";
+        let password = "password";
+        let user = User::create(email, fullname, password, &pool).await?;
+        assert_eq!(user.email, email);
+        assert_eq!(user.fullname, fullname);
+        assert!(user.password_hash.is_some());
+        assert!(user.id.is_positive());
+
+        let user = User::verify(email, password, &pool).await?;
+        assert!(user.is_some());
+        Ok(())
+    }
 }

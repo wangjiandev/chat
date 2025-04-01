@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS users (
     id bigserial PRIMARY KEY,
     fullname VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
     created_at timestamptz DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -32,4 +32,3 @@ CREATE TABLE IF NOT EXISTS messages (
 CREATE INDEX IF NOT EXISTS idx_messages_chat_id_created_at ON messages (chat_id, created_at DESC);
 
 CREATE INDEX IF NOT EXISTS idx_messages_sender_id ON messages (sender_id, created_at DESC);
-
