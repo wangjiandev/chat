@@ -1,3 +1,14 @@
 server:
   port: 6688
   host: 0.0.0.0
+  database_url: postgres://wangjian:postgres@localhost:5432/chat
+
+auth:
+  sk: |
+    -----BEGIN PUBLIC KEY-----
+    MCowBQYDK2VwAyEAEEsa3N77cI9bBk9k6O9R6wn+q9JQOSDQeZsBnxNHwj8=
+    -----END PUBLIC KEY-----
+  pk: |
+    -----BEGIN PRIVATE KEY-----
+    MC4CAQAwBQYDK2VwBCIEILTU6NuIZPQLlq0dwoJ7wdlHL9P7RkkEnF/8gt+UbvEb
+    -----END PRIVATE KEY-----

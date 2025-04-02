@@ -1,2 +1,31 @@
+### 注册
+POST http://localhost:6688/api/register
+Content-Type: application/json
+
+{
+    "fullname": "test",
+    "email": "test@test.com",
+    "password": "test"
+}
+
 ### 登录
+
+# @name login
+POST http://localhost:6688/api/login
+Content-Type: application/json
+
+{
+    "email": "test@test.com",
+    "password": "test"
+}
+
+
+@authToken = {{login.response.body.token}}
+
+### 获取聊天列表
 GET http://localhost:6688/api/chat
+Authorization: Bearer {{authToken}}
+
+### 创建聊天
+POST http://localhost:6688/api/chat
+Authorization: Bearer {{authToken}}

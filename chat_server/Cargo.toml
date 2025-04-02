@@ -13,7 +13,7 @@ serde_json = { workspace = true }
 serde_yaml = { workspace = true }
 axum = { workspace = true }
 tokio = { workspace = true }
-tower-http = { workspace = true }
+tower-http = { workspace = true, features = ["compression-full", "cors", "trace", "fs"] }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 thiserror = { workspace = true }
@@ -25,6 +25,10 @@ sqlx = { version = "0.8.3", features = [
 ] }
 chrono = { version = "0.4.40", features = ["serde"] }
 argon2 = { version = "0.5.3", features = ["std"] }
+jwt-simple = "0.12.12"
+tower = "0.5.2"
+uuid = { version = "1.16.0", features = ["v7", "serde"] }
+axum-extra = { version = "0.10.1", features = ["typed-header"] }
 
 [dev-dependencies]
 sqlx-db-tester = "0.6.0"

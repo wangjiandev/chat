@@ -8,6 +8,8 @@ use argon2::{
 };
 use sqlx::PgPool;
 
+use super::CreateUser;
+
 impl User {
     /// Find a user by email
     pub async fn find_by_email(email: &str, pool: &PgPool) -> Result<Option<Self>, AppError> {
@@ -19,18 +21,13 @@ impl User {
     }
 
     /// Create a new user
-    pub async fn create(
-        email: &str,
-        fullname: &str,
-        password: &str,
-        pool: &PgPool,
-    ) -> Result<Self, AppError> {
-        let password_hash = Self::hash_password(password)?;
+    pub async fn create(input: &CreateUser, pool: &PgPool) -> Result<Self, AppError> {
+        let password_hash = Self::hash_password(&input.password)?;
         let user = sqlx::query_as(
             "INSERT INTO users (email, fullname, password_hash) VALUES ($1, $2, $3) RETURNING *",
         )
-        .bind(email)
-        .bind(fullname)
+        .bind(&input.email)
+        .bind(&input.fullname)
         .bind(password_hash)
         .fetch_one(pool)
         .await?;
@@ -104,7 +101,15 @@ mod tests {
         let email = "test@test.com";
         let fullname = "Test User";
         let password = "password";
-        let user = User::create(email, fullname, password, &pool).await?;
+        let user = User::create(
+            &CreateUser {
+                email: email.to_string(),
+                fullname: fullname.to_string(),
+                password: password.to_string(),
+            },
+            &pool,
+        )
+        .await?;
         assert_eq!(user.email, email);
         assert_eq!(user.fullname, fullname);
         assert!(user.password_hash.is_some());

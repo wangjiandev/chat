@@ -8,6 +8,18 @@ use serde::{Deserialize, Serialize};
 pub struct AppConfig {
     /// 服务器配置
     pub server: ServerConfig,
+    pub auth: AuthConfig,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AuthConfig {
+    pub sk: String,
+    pub pk: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct JwtConfig {
+    pub secret: String,
 }
 
 /// 服务器配置结构
@@ -17,6 +29,8 @@ pub struct ServerConfig {
     pub host: String,
     /// 服务器端口号
     pub port: u16,
+    /// 数据库连接字符串
+    pub database_url: String,
 }
 
 impl AppConfig {

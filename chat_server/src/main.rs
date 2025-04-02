@@ -23,7 +23,7 @@ async fn main() -> Result<()> {
     let config = AppConfig::load()?;
     let addr = format!("{}:{}", config.server.host, config.server.port);
     info!("Starting server at {}", addr);
-    let app = get_router(config);
+    let app = get_router(config).await?;
     axum::serve(TcpListener::bind(&addr).await?, app.into_make_service()).await?;
 
     Ok(())
